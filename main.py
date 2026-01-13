@@ -62,7 +62,7 @@ gemini_client = genai.Client(
 )
 
 response = gemini_client.models.generate_content(
-    model="models/gemini-pro",
+    model="gemini-3-flash-preview",
     contents=prompt
 )
 
