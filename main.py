@@ -1,7 +1,9 @@
+import os
 import chromadb
 from pathlib import Path
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from sentence_transformers import SentenceTransformer
+from google import genai
 
 model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
 
@@ -34,8 +36,34 @@ collection.add(
 question = "what are the plans available"
 question_embedding = model.encode(question, convert_to_numpy=True)
 
-res = collection.query(
+results = collection.query(
     query_embeddings=[question_embedding],
     n_results=3
 )
-print(res["documents"])
+
+retrieved_docs = results["documents"][0]
+
+context = "\n\n".join(retrieved_docs)
+
+prompt = f"""
+You are a helpful assistant.
+Answer ONLY using the context below.
+If the answer is not present, say "I don't know".
+
+Context:
+{context}
+
+Question:
+{question}
+"""
+
+gemini_client = genai.Client(
+    api_key=os.getenv("GEMINI_API_KEY")
+)
+
+response = gemini_client.models.generate_content(
+    model="models/gemini-pro",
+    contents=prompt
+)
+
+print(response.text)
