@@ -1,4 +1,6 @@
+watchfiles
 chromadb
+google-genai
 pathlib
 langchain
 sentence-transformers
