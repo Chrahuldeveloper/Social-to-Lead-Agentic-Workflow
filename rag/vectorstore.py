@@ -12,9 +12,7 @@ client = chromadb.Client(
     )
 )
 
-
 collection = client.get_or_create_collection(name="knowledge")
-
 
 def push_doc():
     doc = Path("data/knowledge.md")
@@ -34,8 +32,6 @@ def push_doc():
         embeddings=embeddings.tolist(),
         ids=[str(i) for i in range(len(chunks))]
     )
-
-
 
 def retrive_info(question , K):
         question_embedding = model.encode(question, convert_to_numpy=True)
